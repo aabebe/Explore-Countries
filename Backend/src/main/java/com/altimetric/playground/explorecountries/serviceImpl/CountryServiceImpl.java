@@ -32,6 +32,7 @@ public class CountryServiceImpl implements CountryService {
     private ObjectMapper mapper;
 
     private final String url = "http://api.worldbank.org/v2/country?format=json";
+    private final String pageUrl="http://api.worldbank.org/v2/country?format=json&page=";
 
 
     @Override
@@ -64,11 +65,9 @@ public class CountryServiceImpl implements CountryService {
             // getting the countries from the rest of the pages
 
             for (int i = 2; i <= page.getPages(); i++) {
-                ResponseEntity<Object[]> countryList = restTemplate.getForEntity(url + i,
-                        Object[].class);
-                countries1.addAll(mapper.convertValue(countryList.getBody()[1],
-                        new TypeReference<List<Country>>() {
-                        }));
+                ResponseEntity<Object[]> countryList = restTemplate.getForEntity(pageUrl + i, Object[].class);
+                countries1.addAll(mapper.convertValue(countryList.getBody()[1], new TypeReference<List<Country>>() {
+                }));
             }
 
 
@@ -84,17 +83,17 @@ public class CountryServiceImpl implements CountryService {
                                          Optional<String> region,
                                          Optional<String> incomeLevel,
                                          Optional<String> lendingType) {
-        List<CountryDTO> countries= new ArrayList<>();
+        List<CountryDTO> countries = new ArrayList<>();
 
-        Predicate<Country> predicate= getCountryPredicate(code);
-        Predicate<Country> regionPredicate= getRegionPredicate(region);
-        Predicate<Country> incomeLevelPredicate= getIncomeLevelPredicate(incomeLevel);
-        Predicate<Country> lendingTypePredicate= getLendingTypePredicate(lendingType);
+        Predicate<Country> predicate = getCountryPredicate(code);
+        Predicate<Country> regionPredicate = getRegionPredicate(region);
+        Predicate<Country> incomeLevelPredicate = getIncomeLevelPredicate(incomeLevel);
+        Predicate<Country> lendingTypePredicate = getLendingTypePredicate(lendingType);
 
         countries.addAll(getCountries().stream()
                 .filter(regionPredicate.or(incomeLevelPredicate).or(lendingTypePredicate))
-        .map(country -> new CountryDTO(country.getName(),country.getCapitalCity()))
-        .collect(Collectors.toList()));
+                .map(country -> new CountryDTO(country.getName(), country.getCapitalCity()))
+                .collect(Collectors.toList()));
 
         return countries;
     }
@@ -113,20 +112,22 @@ public class CountryServiceImpl implements CountryService {
             return false;
         };
     }
-    private Predicate<Country> getIncomeLevelPredicate(Optional<String> incomeLevel){
-        return c->{
-            if (incomeLevel.isPresent()){
+
+    private Predicate<Country> getIncomeLevelPredicate(Optional<String> incomeLevel) {
+        return c -> {
+            if (incomeLevel.isPresent()) {
                 return c.getIncomeLevel().getId().equals(incomeLevel.get());
             }
             return false;
         };
     }
-    private Predicate<Country> getLendingTypePredicate(Optional<String> lendingType){
-        return c->{
-            if(lendingType.isPresent()){
+
+    private Predicate<Country> getLendingTypePredicate(Optional<String> lendingType) {
+        return c -> {
+            if (lendingType.isPresent()) {
                 return c.getLendingType().getId().equals(lendingType.get());
             }
-            return  false;
+            return false;
 
         };
     }
@@ -141,7 +142,7 @@ public class CountryServiceImpl implements CountryService {
     @Override
     public List<Country> getByMatchingRegion(String region) {
         return countryRepository.getCountries().stream()
-                .filter(country->country.getRegion().getId().equals(region))
+                .filter(country -> country.getRegion().getId().equals(region))
                 .collect(Collectors.toList());
     }
 
