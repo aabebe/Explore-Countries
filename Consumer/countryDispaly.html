@@ -1,0 +1,46 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Country Filter consumer </title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+</head>
+<body>
+    <div>
+        <div>
+    <label for="code">Country Code</label>
+    <input type="text" name="code" id="code" required="required" placeholder="Country code">
+</div>
+<div>
+    <label for="region">Region</label>
+    <input type="text" name="region" id="region"  placeholder="Region" >
+</div>
+<div>
+    <label for="incomeLevel">Income Level</label>
+    <input type="text" name="incomeLevel" id="incomeLevel"  placeholder="Income Level">
+</div>
+<div>
+    <label for="lendingType"> Lending Type</label>
+    <input type="text" name="lendingType" id="lendingType"  placeholder="Lending Type">
+</div>
+<div>
+    <button name="create" id="create">Create </button>
+</div>
+    </div> 
+
+<script src="CountryFilter.js"></script>
+<div>
+    <table >
+        <tr>
+            <th>Country name</th>
+            <th>Capital City</th>
+        </tr>
+
+        <tbody id="output">
+
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
